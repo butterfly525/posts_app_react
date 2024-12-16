@@ -5,7 +5,6 @@ const Loader = () => {
     return (
         <div className={cl.loader}>
             
-
         </div>
     )
 }
