@@ -1,20 +1,40 @@
-import React from 'react';
-import About from '../pages/About';
-import Posts from '../pages/Posts';
+import React, { useContext } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { privateRoutes, publicRoutes } from '../router/routes'
 import Error from '../pages/Error';
-import { Routes, Route , Navigate} from 'react-router-dom';
-import PostIdPage from '../pages/PostIdPage';
+import { AuthContext } from '../context';
+import Loader from './UI/Loader/Loader';
+
 
 const AppRouter = () => {
+    const { isAuth, isLoading } = useContext(AuthContext);
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
     return (
         <Routes>
-            <Route path='/about' element={<About />} />
-            <Route exact path='/posts' element={<Posts />} />
-            <Route exact path='/posts/:id' element={<PostIdPage />} />
-            <Route path='/error' element={<Error />} />
-            <Route path='*' element={<Navigate to="/error" replace />} />
+            {isAuth 
+                ? privateRoutes.map(({ path, component: Component }) => (
+                    <Route
+                        key={path} // Уникальный ключ для каждого маршрута
+                        path={path}
+                        element={<Component />}
+                    />
+                ))
+                : publicRoutes.map(({ path, component: Component }) => (
+                    <Route
+                        key={path} // Уникальный ключ для каждого маршрута
+                        path={path}
+                        element={<Component />}
+                    />
+                ))
+            }
+            <Route path='*' element={<Navigate to={isAuth ? "/posts" : "/login"} replace />} />
         </Routes>
     );
 }
+
 
 export default AppRouter;

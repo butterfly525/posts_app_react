@@ -76,3 +76,11 @@
 .navbar__links{
     margin-left: auto;
 }
+
+.navbar__link{
+    margin-left: 20px;
+}
+
+.navbar__link:last-child{
+    margin-right: 20px;
+}
